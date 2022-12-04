@@ -18,6 +18,10 @@ class FootballDAO(object):
     def read_by_name(self, player):
         return self.db.execute_query('MATCH (n:Player {name:$name}) RETURN n',
                                      {'name': player['name']})
+
+    def read_by_name(self, team):
+        return self.db.execute_query('MATCH (n:Team {name:$name}) RETURN n',
+                                     {'name': team['name']})
     
     def read_all_nodes(self):
         return self.db.execute_query('MATCH (n) RETURN n')
@@ -51,7 +55,7 @@ def divider():
 dao = FootballDAO()
 
 while 1:    
-    option = input('1. Create a player\n2. Create a team\n3. Read\n4. Update\n5. Delete\n')
+    option = input('\n1. Create a player\n2. Create a team\n3. Read everything\n4. Update player health\n5. Delete a player\n6. Delete everything\n')
 
     if option == '1':
         name = input('  Name: ')
@@ -89,7 +93,6 @@ while 1:
             'name': name,
             'health': health
         }
-        
         aux = dao.update_health(player)
         divider()
 
@@ -98,8 +101,12 @@ while 1:
         person = {
             'name': name
         }
-        
         aux = dao.delete(player)
+        divider()
+
+    elif option == '6':
+        aux = dao.delete_all_nodes()
+        pp(aux)
         divider()
 
     else:
